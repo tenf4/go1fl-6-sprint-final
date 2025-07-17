@@ -1,5 +1,18 @@
 package main
 
-func main() {
+import (
+	"log"
+	"os"
 
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/server"
+)
+
+func main() {
+	logger := log.New(os.Stdout, "server: ", log.LstdFlags|log.Lshortfile)
+	serv := server.NewServer(logger)
+	logger.Println("сервер запускается на :8080")
+	err := serv.HTTP.ListenAndServe()
+	if err != nil {
+		logger.Fatal(err)
+	}
 }
