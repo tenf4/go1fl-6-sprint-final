@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -18,6 +19,10 @@ func UploadHandler(res http.ResponseWriter, req *http.Request) {
 
 	if err := req.ParseMultipartForm(0); err != nil {
 		http.Error(res, "parsing error", http.StatusBadRequest)
+	}
+	if req.Method != http.MethodPost {
+		http.Error(res, "method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 	file, v, err := req.FormFile("myFile")
 	if err != nil {
@@ -47,7 +52,9 @@ func UploadHandler(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "file writing error", http.StatusInternalServerError)
 		return
 	}
-
-	res.Write([]byte(convData))
-
+	if _, err = res.Write([]byte(convData)); err != nil {
+		log.Printf("response sending failure: %v", err)
+		http.Error(res, "response writing error", http.StatusInternalServerError)
+		return
+	}
 }
