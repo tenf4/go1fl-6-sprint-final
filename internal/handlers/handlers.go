@@ -12,7 +12,7 @@ import (
 )
 
 func IndexHandler(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "../index.html")
+	http.ServeFile(res, req, "./index.html")
 }
 
 func UploadHandler(res http.ResponseWriter, req *http.Request) {
